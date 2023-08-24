@@ -1,0 +1,46 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum AccountProviderType {
+  GOOGLE
+  CREDENTIAL
+  GITHUB
+}
+
+enum RoleType {
+  USER
+  ADMIN
+}
+
+model Account {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId()
+  isTrash      Boolean  @default(false)
+  username     String
+  hashpassword String?
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+  User         User?    @relation(fields: [userId], references: [id])
+  userId       String?  @db.ObjectId()
+}
+
+model User {
+  id           String              @id @default(auto()) @map("_id") @db.ObjectId()
+  isTrash      Boolean             @default(false)
+  name         String
+  email        String
+  hashpassword String?
+  image        String?
+  providers    AccountProviderType
+  account      Account[]
+  created_at   DateTime            @default(now())
+  updated_at   DateTime            @updatedAt
+}
