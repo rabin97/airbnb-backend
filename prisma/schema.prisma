@@ -10,20 +10,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum RoleType {
+  ADMIN
+  USER
+}
+
 enum AccountProviderType {
   GOOGLE
   CREDENTIAL
   GITHUB
 }
 
-enum RoleType {
-  USER
-  ADMIN
-}
-
 model Account {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId()
   isTrash      Boolean  @default(false)
+  provider     AccountProviderType
   username     String
   hashpassword String?
   created_at   DateTime @default(now())
@@ -39,7 +40,7 @@ model User {
   email        String
   hashpassword String?
   image        String?
-  providers    AccountProviderType
+  role         RoleType
   account      Account[]
   created_at   DateTime            @default(now())
   updated_at   DateTime            @updatedAt

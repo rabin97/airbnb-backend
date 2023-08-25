@@ -1,4 +1,4 @@
-import { plainToInstance, Type } from 'class-transformer';
+import { plainToInstance, Transform, Type } from 'class-transformer';
 import {
   IsEnum,
   IsNotEmpty,
@@ -41,8 +41,10 @@ export class EnvironmentVariable {
   @Type(() => Number)
   @IsNotEmpty()
   COOKIE_EXPIRATION_TIME: number;
-
+   
+  @Type(() => Number)
   @IsNotEmpty()
+  @Transform(({value})=> parseInt(value))
   BCRYPT_SALT_ROUNDS: number;
 }
 
